@@ -6,7 +6,8 @@ WiFiServer server(80);
 const char* ssid="sosiska";
 const char* password = "sosiska5959";
 
-String output7State = "off";
+String output5State = "off";
+String output7State = "on";
 String header;
 
 // Current time
@@ -18,8 +19,10 @@ const long timeoutTime = 2000;
 
 void setup() {
   
-  pinMode(D7,OUTPUT);
-  digitalWrite(D7,LOW);
+  pinMode(D7, OUTPUT);
+  pinMode(D5, OUTPUT);
+  digitalWrite(D7, LOW);
+  digitalWrite(D5, LOW);
 
   Serial.begin(115200);
   Serial.println();
@@ -80,6 +83,14 @@ void loop() {
               Serial.println("GPIO 7 off");
               output7State = "off";
               digitalWrite(D7, LOW);
+            } else if (header.indexOf("GET /5/on") >= 0) {
+              Serial.println("GPIO 5 on");
+              output5State = "on";
+              digitalWrite(D5, HIGH);
+            } else if (header.indexOf("GET /5/off") >= 0) {
+              Serial.println("GPIO 5 off");
+              output5State = "off";
+              digitalWrite(D5, LOW);
             }
             
             // Display the HTML web page
@@ -97,12 +108,20 @@ void loop() {
             client.println("<body><h1>ESP8266 Web Server</h1>");
             
             // Display current state, and ON/OFF buttons for GPIO 7  
-            client.println("<p>GPIO 7 - State " + output7State + "</p>");
+            client.println("<p>GPIO GREEN - State " + output7State + "</p>");
             // If the output5State is off, it displays the ON button       
             if (output7State=="off") {
               client.println("<p><a href=\"/7/on\"><button class=\"button\">ON</button></a></p>");
             } else {
               client.println("<p><a href=\"/7/off\"><button class=\"button button2\">OFF</button></a></p>");
+            } 
+            
+            client.println("<p>GPIO RED - State " + output5State + "</p>");
+            // If the output5State is off, it displays the ON button       
+            if (output5State=="off") {
+              client.println("<p><a href=\"/5/on\"><button class=\"button\">ON</button></a></p>");
+            } else {
+              client.println("<p><a href=\"/5/off\"><button class=\"button button2\">OFF</button></a></p>");
             } 
            
             client.println("</body></html>");
