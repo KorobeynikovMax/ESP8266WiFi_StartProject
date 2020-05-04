@@ -4,7 +4,7 @@
 WiFiServer server(80);
 
 const char* ssid="sosiska";
-const char* password = "sosiska5959";
+const char* password = "password";
 
 String output5State = "off";
 String output7State = "on";
